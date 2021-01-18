@@ -95,6 +95,10 @@ impl RenderContext for NullRenderContext {
     }
     fn transform(&mut self, _transform: Affine) {}
 
+    fn save_image(&mut self, _rect: impl Into<Rect>) -> Result<Self::Image, Error> {
+        Ok(NullImage)
+    }
+
     fn make_image(
         &mut self,
         _width: usize,
@@ -104,6 +108,7 @@ impl RenderContext for NullRenderContext {
     ) -> Result<Self::Image, Error> {
         Ok(NullImage)
     }
+
     fn draw_image(
         &mut self,
         _image: &Self::Image,

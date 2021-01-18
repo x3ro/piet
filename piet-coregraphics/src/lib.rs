@@ -281,6 +281,22 @@ impl<'a> RenderContext for CoreGraphicsContext<'a> {
         self.ctx.concat_ctm(to_cgaffine(transform));
     }
 
+    fn save_image(&mut self, rect: impl Into<Rect>) -> Result<Self::Image, Error> {
+        // Creates a CGImage from the current context.
+        // In my testing so far, this image was the same size as
+        // the entire drawable area of the window, so I'm guessing
+        // there's only one graphics context per window and not e.g. per
+        // widget.
+        let raw_image = self.ctx.create_image().ok_or(Error::InvalidInput)?;
+
+        // Since the raw image above contains everything, and we're likely only
+        // interested in e.g. a particular widget, we need to crop it now.
+        raw_image
+            .cropped(to_cgrect(rect))
+            .map(|img| CoreGraphicsImage::NonEmpty(img))
+            .ok_or(Error::InvalidInput)
+    }
+
     fn make_image(
         &mut self,
         width: usize,

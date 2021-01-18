@@ -175,6 +175,8 @@ where
         format: ImageFormat,
     ) -> Result<Self::Image, Error>;
 
+    fn save_image(&mut self, rect: impl Into<Rect>) -> Result<Self::Image, Error>;
+
     /// Draw an image.
     ///
     /// The `image` is scaled to the provided `dst_rect`.
