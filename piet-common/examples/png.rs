@@ -6,6 +6,8 @@ use piet::kurbo::Line;
 use piet::{Color, RenderContext};
 #[cfg(not(target_arch = "wasm32"))]
 use piet_common::Device;
+use piet::kurbo::Rect;
+use piet::InterpolationMode;
 
 /// Feature "png" needed for save_to_file() and it's disabled by default for optional dependencies
 /// cargo run --example png --features png
@@ -21,6 +23,17 @@ fn main() {
         let brush = rc.solid_brush(Color::rgb8(0x00, 0x00, 0x80));
         rc.stroke(Line::new((10.0, 10.0), (100.0, 50.0)), &brush, 1.0);
         rc.finish().unwrap();
+
+        let copy = rc.save_image(Rect::new(10.0, 10.0, 640.0, 480.0)).unwrap();
+        let copy1 = rc.save_image(Rect::new(10.0, 10.0, 100.0, 50.0)).unwrap();
+
+
+        rc.draw_image(&copy, Rect::new(100.0, 50.0, 740.0, 530.0), InterpolationMode::Bilinear);
+        rc.draw_image(&copy1, Rect::new(200.0, 50.0, 740.0, 530.0), InterpolationMode::Bilinear);
+        rc.draw_image(&copy1, Rect::new(10.0, 50.0, 100.0, 90.0), InterpolationMode::Bilinear);
+
+        rc.finish().unwrap();
+
         std::mem::drop(rc);
 
         bitmap
